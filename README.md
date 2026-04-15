@@ -7,7 +7,7 @@ NIDHI- PES2UG24AM102
 
 
 
-⚙️ Setup Instructions
+Setup Instructions:
 Follow these steps to set up the project:
 
 # Clone the repository
@@ -31,7 +31,7 @@ sudo mount -t proc proc /proc
 
 
 
-🚀 Run Instructions
+Run Instructions:
 🔹 Start Supervisor
 sudo ./engine supervisor ../rootfs-base
 🔹 Start Containers
@@ -65,26 +65,31 @@ Kernel Module Loaded	/dev/container_monitor created successfully
 <img width="1167" height="515" alt="image" src="https://github.com/user-attachments/assets/2b38491a-f265-447e-bcf2-a0448623b56d" />
 
 Containers Running	Supervisor + multiple containers active
+<img width="1427" height="443" alt="image" src="https://github.com/user-attachments/assets/6420791c-c8bb-40a8-936a-61fbc28e22ca" />
 
 
 engine ps Output	Shows container IDs and PIDs
 <img width="1419" height="427" alt="image" src="https://github.com/user-attachments/assets/ed258d4e-63b0-4f57-9585-4f189bdb8d9a" />
 
 Logs Output	Container execution logs
+<img width="1414" height="447" alt="image" src="https://github.com/user-attachments/assets/3d45dc39-b60c-49f3-aeb3-9c0647878994" />
 
 Soft Limit Trigger	Warning in kernel logs
 
 Hard Limit Trigger	Container killed due to limit
+<img width="947" height="732" alt="image" src="https://github.com/user-attachments/assets/2a7fb622-a3f3-4fe1-80d2-eb25f9b478b0" />
 
 Stop Command	Container termination confirmation
+<img width="1031" height="295" alt="image" src="https://github.com/user-attachments/assets/663c33c3-9f17-495f-ad61-305344f93dae" />
 
 No Zombie Processes	No <defunct> processes present
+<img width="1026" height="379" alt="image" src="https://github.com/user-attachments/assets/c077befa-7362-45ba-9b76-70f9bc33bff3" />
 
 
 
 
 
-⚙️ Engineering Analysis
+Engineering Analysis:
 🔹 Namespace Isolation
 PID Namespace (CLONE_NEWPID) → Independent process IDs
 UTS Namespace (CLONE_NEWUTS) → Custom hostname per container
@@ -95,7 +100,7 @@ Mount Namespace (CLONE_NEWNS) → Isolated filesystem
 
 
 
-🔹 Inter-Process Communication (IPC)
+Inter-Process Communication (IPC):
 Method: UNIX Domain Sockets
 Path: /tmp/mini_runtime.sock
 Flow: CLI ↔ Supervisor
@@ -108,7 +113,7 @@ Secure local communication
 
 
 
-🔹 Memory Monitoring (Kernel Module)
+Memory Monitoring (Kernel Module):
 Uses get_mm_rss() for memory tracking
 
 Enforcement:
@@ -121,7 +126,7 @@ Hard Limit → Process killed (SIGKILL)
 
 
 
-🔹 Process Scheduling Analysis
+Process Scheduling Analysis:
 Tested using cpu_hog
 Priority controlled via nice values
 
@@ -129,7 +134,10 @@ Observations:
 
 Lower nice → Higher priority → Faster
 Higher nice → Lower priority → Slower
-🧩 Design Decisions
+
+
+
+Design Decisions:
 Component	Choice	Reason
 IPC	UNIX Domain Socket	Efficient & simple
 Process Creation	clone()	Lightweight
@@ -137,16 +145,25 @@ Filesystem Isolation	chroot()	Secure
 Memory Tracking	Kernel Module	Low-level accuracy
 Container Storage	Linked List	Dynamic management
 Process Cleanup	SIGCHLD	Prevent zombies
-📊 Scheduling Results
+
+
+
+Scheduling Results:
 Process	Nice Value	Behavior
 cpu_hog (default)	0	Normal execution
 cpu_hog (low priority)	10	Slower
 cpu_hog (high priority)	-5	Faster
-🔍 Analysis
+
+
+
+Analysis:
 Linux scheduler favors lower nice values
 Demonstrates fairness and CPU sharing
 Confirms scheduling impact on performance
-✅ Conclusion
+
+
+
+Conclusion:
 
 This project successfully demonstrates:
 
@@ -158,7 +175,7 @@ Proper lifecycle management (no zombies)
 
 ➡️ Combines user-space and kernel-space to simulate a real container runtime.
 
-📌 Learning Outcomes
+Outcomes
 Linux namespaces (PID, UTS, Mount)
 Kernel module development
 System programming with clone()
